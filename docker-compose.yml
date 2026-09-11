@@ -1,0 +1,21 @@
+services:
+  dashboard:
+    build: .
+    image: g26-dashboard:latest
+    container_name: g26-dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Shared Secret für POST /api/ingest (Apple Shortcuts). Pflicht.
+      INGEST_TOKEN: ${INGEST_TOKEN:?INGEST_TOKEN muss in .env gesetzt sein}
+      DATA_DIR: /data
+      # Wird das Dashboard über einen Reverse Proxy erreicht, hier dessen
+      # Origin eintragen, damit die Server Actions akzeptiert werden.
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-}
+      TZ: Europe/Berlin
+    volumes:
+      - dashboard-data:/data
+
+volumes:
+  dashboard-data:
